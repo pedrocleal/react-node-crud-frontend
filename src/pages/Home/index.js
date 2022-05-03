@@ -57,10 +57,10 @@ export default function Home() {
               <span>{contact.phone}</span>
             </div>
             <div className="actions">
-              <Link to={`edit/${contact.id}`}>
+              <Link to={`/edit/${contact.id}`}>
                 <img src={edit} alt="Edit button" />
               </Link>
-              <Link to={`delete/${contact.id}`}>
+              <Link to={`/delete/${contact.id}`}>
                 <img src={trash} alt="Delete button" />
               </Link>
             </div>

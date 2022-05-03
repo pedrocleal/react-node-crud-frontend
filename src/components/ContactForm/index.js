@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormGroup from '../FormGroup';
 import { Input } from '../Input';
 import { Button } from '../Button';
@@ -10,13 +10,20 @@ import useErrors from '../../hooks/useErrors';
 
 import formatPhone from '../../utils/formatPhone';
 
-export default function ContactForm({ buttonText }) {
+export default function ContactForm({ buttonText, contactToEdit }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+
+  useEffect(() => {
+    setName(contactToEdit.name || '');
+    setPhone(formatPhone(contactToEdit.phone || ''));
+  }, [contactToEdit]);
 
   const {
     errors, setError, removeError, getErrorMessageByFieldName,
   } = useErrors();
+
+  console.log({ name, phone });
 
   const isFormValid = errors.length === 0 && name && phone;
 
@@ -68,4 +75,9 @@ export default function ContactForm({ buttonText }) {
 
 ContactForm.propTypes = {
   buttonText: PropTypes.string.isRequired,
+  contactToEdit: PropTypes.shape({ name: PropTypes.string, phone: PropTypes.string }),
+};
+
+ContactForm.defaultProps = {
+  contactToEdit: null,
 };
