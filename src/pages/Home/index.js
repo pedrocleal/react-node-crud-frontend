@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
-  Container, InputSearchContainer,
+  Container,
   HomeHeader, ListContacts, Card,
 } from './styles';
 
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/trash.svg';
+import { Input } from '../../components/Input';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,7 +32,7 @@ export default function Home() {
   return (
     <Container>
 
-      <InputSearchContainer
+      <Input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Pesquisar um contato..."
@@ -39,9 +40,9 @@ export default function Home() {
 
       <HomeHeader>
         <span>
-          {contacts.length}
+          {filteredContacts.length}
           {' '}
-          {contacts.length !== 1 ? 'contatos' : 'contato'}
+          {filteredContacts.length !== 1 ? 'contatos' : 'contato'}
         </span>
         <Link to="/new">Novo contato</Link>
       </HomeHeader>
