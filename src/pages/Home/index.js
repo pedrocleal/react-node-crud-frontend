@@ -5,13 +5,18 @@ import {
   HomeHeader, ListContacts, Card,
 } from './styles';
 
+import delay from '../../utils/delay';
+
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/trash.svg';
+
 import { Input } from '../../components/Input';
+import Loader from '../../components/Loader';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [contacts, setContacts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredContacts = contacts.filter(
     (contact) => contact.name.toUpperCase().includes(searchTerm.toUpperCase()),
@@ -21,17 +26,21 @@ export default function Home() {
     fetch('http://localhost:3030/contacts')
       .then(async (response) => {
         const data = await response.json();
+        await delay(500);
         setContacts(data);
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
   return (
     <Container>
-
+      {isLoading ? <Loader /> : null}
       <Input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

@@ -15,15 +15,13 @@ export default function ContactForm({ buttonText, contactToEdit }) {
   const [phone, setPhone] = useState('');
 
   useEffect(() => {
-    setName(contactToEdit.name || '');
-    setPhone(formatPhone(contactToEdit.phone || ''));
+    setName(contactToEdit?.name || '');
+    setPhone(formatPhone(contactToEdit?.phone || ''));
   }, [contactToEdit]);
 
   const {
     errors, setError, removeError, getErrorMessageByFieldName,
   } = useErrors();
-
-  console.log({ name, phone });
 
   const isFormValid = errors.length === 0 && name && phone;
 
@@ -47,6 +45,10 @@ export default function ContactForm({ buttonText, contactToEdit }) {
     }
   }
 
+  function handleButtonClick() {
+    console.log('dsadsadasd');
+  }
+
   return (
     <Container>
       <FormGroup error={getErrorMessageByFieldName('name')}>
@@ -68,7 +70,7 @@ export default function ContactForm({ buttonText, contactToEdit }) {
         />
       </FormGroup>
 
-      <Button disabled={!isFormValid}>{buttonText}</Button>
+      <Button onClick={handleButtonClick} disabled={!isFormValid}>{buttonText}</Button>
     </Container>
   );
 }
