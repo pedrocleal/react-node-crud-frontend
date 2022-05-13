@@ -92,4 +92,11 @@ export const Card = styled.div`
   .actions * {
     margin-left: 4px;
   }
+
+  .actions button {
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+  }
 `;

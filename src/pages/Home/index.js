@@ -12,11 +12,13 @@ import trash from '../../assets/images/trash.svg';
 
 import { Input } from '../../components/Input';
 import Loader from '../../components/Loader';
+import Modal from '../../components/Modal';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredContacts = contacts.filter(
     (contact) => contact.name.toUpperCase().includes(searchTerm.toUpperCase()),
@@ -38,9 +40,18 @@ export default function Home() {
       });
   }, []);
 
+  function handleOpenModal(id) {
+    setIsModalOpen(true);
+    console.log(id);
+  }
+
   return (
     <Container>
+
       {isLoading ? <Loader /> : null}
+
+      {isModalOpen ? <Modal /> : null}
+
       <Input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -69,9 +80,9 @@ export default function Home() {
               <Link to={`/edit/${contact.id}`}>
                 <img src={edit} alt="Edit button" />
               </Link>
-              <Link to={`/delete/${contact.id}`}>
+              <button onClick={() => handleOpenModal(contact.id)} type="button">
                 <img src={trash} alt="Delete button" />
-              </Link>
+              </button>
             </div>
           </Card>
         ))}
