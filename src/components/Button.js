@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const Button = styled.button`
   padding: 16px;
   height: 52px; 
-  width: 100%;
   margin-top: 32px;
   background: ${({ theme }) => theme.colors.purple};
   border: none;

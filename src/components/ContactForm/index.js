@@ -9,8 +9,9 @@ import { Container } from './styles';
 import useErrors from '../../hooks/useErrors';
 
 import formatPhone from '../../utils/formatPhone';
+import { addNewContact } from '../../services/api/newContact';
 
-export default function ContactForm({ buttonText, contactToEdit }) {
+export default function ContactForm({ type, contactToEdit }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -45,8 +46,13 @@ export default function ContactForm({ buttonText, contactToEdit }) {
     }
   }
 
-  function handleButtonClick() {
-    console.log('dsadsadasd');
+  async function handleCreateNewContact() {
+    const response = await addNewContact({ name, phone });
+    console.log(response);
+  }
+
+  function handleUpdateContact() {
+    console.log('update contact');
   }
 
   return (
@@ -70,13 +76,31 @@ export default function ContactForm({ buttonText, contactToEdit }) {
         />
       </FormGroup>
 
-      <Button onClick={handleButtonClick} disabled={!isFormValid}>{buttonText}</Button>
+      {type === 'CREATE' ? (
+        <Button
+          onClick={handleCreateNewContact}
+          type="button"
+          disabled={!isFormValid}
+        >
+          Cadastrar
+
+        </Button>
+      ) : (
+        <Button
+          onClick={handleUpdateContact}
+          type="button"
+          disabled={!isFormValid}
+        >
+          Atualizar dados
+
+        </Button>
+      )}
     </Container>
   );
 }
 
 ContactForm.propTypes = {
-  buttonText: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   contactToEdit: PropTypes.shape({ name: PropTypes.string, phone: PropTypes.string }),
 };
 

@@ -13,36 +13,38 @@ import trash from '../../assets/images/trash.svg';
 import { Input } from '../../components/Input';
 import Loader from '../../components/Loader';
 import Modal from '../../components/Modal';
+import { listContacts } from '../../services/api/listContacts';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contactToDelete, setContactToDelete] = useState(null);
 
   const filteredContacts = contacts.filter(
     (contact) => contact.name.toUpperCase().includes(searchTerm.toUpperCase()),
   );
 
   useEffect(() => {
-    fetch('http://localhost:3030/contacts')
-      .then(async (response) => {
-        const data = await response.json();
-        await delay(500);
-        setContacts(data);
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    async function getContacts() {
+      const contactsList = await listContacts();
+      await delay(500);
+      setContacts(contactsList);
+      setIsLoading(false);
+    }
+
+    getContacts();
   }, []);
 
-  function handleOpenModal(id) {
-    setIsModalOpen(true);
-    console.log(id);
+  function handleOpenModal() {
+    setIsModalOpen((prevState) => !prevState);
+  }
+
+  function HandleDeleteButtonClick(clickedId) {
+    setIsModalOpen((prevState) => !prevState);
+    const contact = contacts.find((item) => item.id === clickedId);
+    setContactToDelete(contact);
   }
 
   return (
@@ -50,7 +52,13 @@ export default function Home() {
 
       {isLoading ? <Loader /> : null}
 
-      {isModalOpen ? <Modal /> : null}
+      {isModalOpen ? (
+        <Modal
+          isModalDanger
+          contact={contactToDelete}
+          onCloseModal={handleOpenModal}
+        />
+      ) : null}
 
       <Input
         value={searchTerm}
@@ -80,7 +88,7 @@ export default function Home() {
               <Link to={`/edit/${contact.id}`}>
                 <img src={edit} alt="Edit button" />
               </Link>
-              <button onClick={() => handleOpenModal(contact.id)} type="button">
+              <button onClick={() => HandleDeleteButtonClick(contact.id)} type="button">
                 <img src={trash} alt="Delete button" />
               </button>
             </div>
