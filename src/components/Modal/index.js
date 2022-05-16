@@ -38,33 +38,48 @@ export default function Modal({
 
             </h1>
             <p>Esta ação não pode ser desfeita!</p>
+
+            <ModalFooter danger={isModalDanger}>
+              <Button
+                type="button"
+                className="cancel-button"
+                onClick={onCloseModal}
+              >
+                Cancelar
+
+              </Button>
+              <Button
+                danger={isModalDanger}
+                type="button"
+                className="confirm-button"
+                onClick={() => handleDeleteContact(id)}
+              >
+                {isModalDanger ? 'Deletar' : 'Confirmar'}
+
+              </Button>
+            </ModalFooter>
           </>
         ) : (
           <>
             <h1>Titulo do modal</h1>
             <p>Corpo do modal</p>
+
+            <ModalFooter danger={isModalDanger}>
+              <Button
+                type="button"
+                className="cancel-button"
+                onClick={onCloseModal}
+              >
+                Cancelar
+
+              </Button>
+              <Button>
+                {isModalDanger ? 'Deletar' : 'Confirmar'}
+              </Button>
+            </ModalFooter>
           </>
         )}
 
-        <ModalFooter danger={isModalDanger}>
-          <Button
-            type="button"
-            className="cancel-button"
-            onClick={onCloseModal}
-          >
-            Cancelar
-
-          </Button>
-          <Button
-            danger={isModalDanger}
-            type="button"
-            className="confirm-button"
-            onClick={() => handleDeleteContact(id)}
-          >
-            {isModalDanger ? 'Deletar' : 'Confirmar'}
-
-          </Button>
-        </ModalFooter>
       </Container>
     </Overlay>,
     document.getElementById('modal-root'),
