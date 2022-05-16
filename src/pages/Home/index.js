@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   Container,
-  HomeHeader, ListContacts, Card,
+  HomeHeader, ListContacts, Card, NotFoundContact,
 } from './styles';
 
 import delay from '../../utils/delay';
 
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/trash.svg';
+import noContactFound from '../../assets/images/magnifier-question.svg';
 
 import { Input } from '../../components/Input';
 import Loader from '../../components/Loader';
@@ -26,6 +27,8 @@ export default function Home() {
     (contact) => contact.name.toUpperCase().includes(searchTerm.toUpperCase()),
   );
 
+  // Effect function to run on first render and when the contacts list change
+
   useEffect(() => {
     async function getContacts() {
       const contactsList = await listContacts();
@@ -35,7 +38,7 @@ export default function Home() {
     }
 
     getContacts();
-  }, []);
+  }, [contacts]);
 
   function handleOpenModal() {
     setIsModalOpen((prevState) => !prevState);
@@ -77,24 +80,38 @@ export default function Home() {
 
       <hr />
 
-      <ListContacts>
-        {filteredContacts.map((contact) => (
-          <Card key={contact.id}>
-            <div className="contact-info">
-              <p>{contact.name}</p>
-              <span>{contact.phone}</span>
-            </div>
-            <div className="actions">
-              <Link to={`/edit/${contact.id}`}>
-                <img src={edit} alt="Edit button" />
-              </Link>
-              <button onClick={() => HandleDeleteButtonClick(contact.id)} type="button">
-                <img src={trash} alt="Delete button" />
-              </button>
-            </div>
-          </Card>
-        ))}
-      </ListContacts>
+      {filteredContacts.length !== 0 ? (
+        <ListContacts>
+          {filteredContacts.map((contact) => (
+            <Card key={contact.id}>
+              <div className="contact-info">
+                <p>{contact.name}</p>
+                <span>{contact.phone}</span>
+              </div>
+              <div className="actions">
+                <Link to={`/edit/${contact.id}`}>
+                  <img src={edit} alt="Edit button" />
+                </Link>
+                <button onClick={() => HandleDeleteButtonClick(contact.id)} type="button">
+                  <img src={trash} alt="Delete button" />
+                </button>
+              </div>
+            </Card>
+          ))}
+        </ListContacts>
+      ) : (
+        <NotFoundContact>
+          <img src={noContactFound} alt="No contact found" />
+          <p>
+            Nenhum resultado encontrado para
+            {' '}
+            <strong>
+              {searchTerm}
+            </strong>
+            .
+          </p>
+        </NotFoundContact>
+      )}
 
     </Container>
   );

@@ -100,3 +100,15 @@ export const Card = styled.div`
     cursor: pointer;
   }
 `;
+
+export const NotFoundContact = styled.div`
+  margin-top: 57px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  p {
+    margin-left: 8px;
+    font-size: 18px;
+  }
+`;
