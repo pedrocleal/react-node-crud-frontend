@@ -9,8 +9,8 @@ export const Container = styled.div`
   justify-content: center;
 
   hr {
+    margin-top: 24px;
     width: 100%;
-    margin-top: 32px;
     background: ${({ theme }) => theme.colors.grey};
     height: 2px;
     border: none;
@@ -45,7 +45,7 @@ export const HomeHeader = styled.div`
     font-weight: bold;
   }
 
-  /* Novo contato */
+  /* New contact button */
   a {
     padding: 8px 16px;
     background: none;
@@ -55,6 +55,12 @@ export const HomeHeader = styled.div`
     font-weight: bold;
     border: 2px solid ${({ theme }) => theme.colors.purple};
     border-radius: 8px;
+    transition: all 0.3s ease-in;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.purple};
+      color: #fff;
+    }
   }
 `;
 
@@ -102,13 +108,54 @@ export const Card = styled.div`
 `;
 
 export const NotFoundContact = styled.div`
+  width: 100%;
   margin-top: 57px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   p {
-    margin-left: 8px;
+    margin-left: 16px;
     font-size: 18px;
+  }
+`;
+
+export const NewContactContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+
+  /* New contact button */
+  a {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: ${({ theme }) => theme.colors.purple};
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px solid ${({ theme }) => theme.colors.purple};
+    border-radius: 8px;
+    transition: all 0.3s ease-in;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.purple};
+      color: #fff;
+    }
+  }
+
+  hr {
+    margin: 16px 0;
+  }
+
+  img {
+    height: 100px;
+  }
+
+  p {
+    text-align: center;
+    color: ${({ theme }) => theme.colors.lightGrey};
+    margin-top: 16px;
   }
 `;

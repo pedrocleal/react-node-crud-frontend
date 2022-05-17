@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   Container,
-  HomeHeader, ListContacts, Card, NotFoundContact,
+  HomeHeader, ListContacts, Card, NotFoundContact, NewContactContainer,
 } from './styles';
 
 import delay from '../../utils/delay';
@@ -10,6 +10,7 @@ import delay from '../../utils/delay';
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/trash.svg';
 import noContactFound from '../../assets/images/magnifier-question.svg';
+import emptyBox from '../../assets/images/empty-box.svg';
 
 import { Input } from '../../components/Input';
 import Loader from '../../components/Loader';
@@ -63,56 +64,77 @@ export default function Home() {
         />
       ) : null}
 
-      <Input
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Pesquisar um contato..."
-      />
+      {/* If does not have any contact */}
 
-      <HomeHeader>
-        <span>
-          {filteredContacts.length}
-          {' '}
-          {filteredContacts.length !== 1 ? 'contatos' : 'contato'}
-        </span>
-        <Link to="/new">Novo contato</Link>
-      </HomeHeader>
-
-      <hr />
-
-      {filteredContacts.length !== 0 ? (
-        <ListContacts>
-          {filteredContacts.map((contact) => (
-            <Card key={contact.id}>
-              <div className="contact-info">
-                <p>{contact.name}</p>
-                <span>{contact.phone}</span>
-              </div>
-              <div className="actions">
-                <Link to={`/edit/${contact.id}`}>
-                  <img src={edit} alt="Edit button" />
-                </Link>
-                <button onClick={() => HandleDeleteButtonClick(contact.id)} type="button">
-                  <img src={trash} alt="Delete button" />
-                </button>
-              </div>
-            </Card>
-          ))}
-        </ListContacts>
-      ) : (
-        <NotFoundContact>
-          <img src={noContactFound} alt="No contact found" />
+      {filteredContacts.length === 0 ? (
+        <NewContactContainer>
+          <Link to="/new">Novo contato</Link>
+          <hr />
+          <img src={emptyBox} alt="Caixa vazia" />
           <p>
-            Nenhum resultado encontrado para
+            Você ainda não tem nenhum contato cadastrado!
             {' '}
-            <strong>
-              {searchTerm}
-            </strong>
-            .
+            <br />
+            Clique no botão
+            {' '}
+            <strong>”Novo contato”</strong>
+            {' '}
+            acima para cadastrar o seu primeiro!
           </p>
-        </NotFoundContact>
-      )}
+        </NewContactContainer>
+      ) : (
+        <>
+          <Input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Pesquisar um contato..."
+          />
 
+          <HomeHeader>
+            <span>
+              {filteredContacts.length}
+              {' '}
+              {filteredContacts.length !== 1 ? 'contatos' : 'contato'}
+            </span>
+            <Link to="/new">Novo contato</Link>
+          </HomeHeader>
+          <hr />
+          <ListContacts>
+            {filteredContacts.map((contact) => (
+              <Card key={contact.id}>
+                <div className="contact-info">
+                  <p>{contact.name}</p>
+                  <span>{contact.phone}</span>
+                </div>
+                <div className="actions">
+                  <Link to={`/edit/${contact.id}`}>
+                    <img src={edit} alt="Edit button" />
+                  </Link>
+                  <button onClick={() => HandleDeleteButtonClick(contact.id)} type="button">
+                    <img src={trash} alt="Delete button" />
+                  </button>
+                </div>
+              </Card>
+            ))}
+          </ListContacts>
+        </>
+      )}
     </Container>
   );
 }
+
+// {filteredContacts.length !== 0 ? (
+
+// ) : (
+//   <NotFoundContact>
+//     <img src={noContactFound} alt="No contact found" />
+//     <p>
+//       Nenhum resultado encontrado para
+//       {' '}
+//       <strong>
+//         {searchTerm}
+//       </strong>
+//       .
+//     </p>
+//   </NotFoundContact>
+// )}
