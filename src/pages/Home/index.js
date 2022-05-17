@@ -66,7 +66,7 @@ export default function Home() {
 
       {/* If does not have any contact */}
 
-      {filteredContacts.length === 0 ? (
+      {contacts.length === 0 ? (
         <NewContactContainer>
           <Link to="/new">Novo contato</Link>
           <hr />
@@ -99,42 +99,40 @@ export default function Home() {
             <Link to="/new">Novo contato</Link>
           </HomeHeader>
           <hr />
-          <ListContacts>
-            {filteredContacts.map((contact) => (
-              <Card key={contact.id}>
-                <div className="contact-info">
-                  <p>{contact.name}</p>
-                  <span>{contact.phone}</span>
-                </div>
-                <div className="actions">
-                  <Link to={`/edit/${contact.id}`}>
-                    <img src={edit} alt="Edit button" />
-                  </Link>
-                  <button onClick={() => HandleDeleteButtonClick(contact.id)} type="button">
-                    <img src={trash} alt="Delete button" />
-                  </button>
-                </div>
-              </Card>
-            ))}
-          </ListContacts>
+          {filteredContacts.length === 0 ? (
+            <NotFoundContact>
+              <img src={noContactFound} alt="No contact found" />
+              <p>
+                Nenhum resultado encontrado para
+                {' '}
+                <strong>
+                  {searchTerm}
+                </strong>
+                .
+              </p>
+            </NotFoundContact>
+          ) : (
+            <ListContacts>
+              {filteredContacts.map((contact) => (
+                <Card key={contact.id}>
+                  <div className="contact-info">
+                    <p>{contact.name}</p>
+                    <span>{contact.phone}</span>
+                  </div>
+                  <div className="actions">
+                    <Link to={`/edit/${contact.id}`}>
+                      <img src={edit} alt="Edit button" />
+                    </Link>
+                    <button onClick={() => HandleDeleteButtonClick(contact.id)} type="button">
+                      <img src={trash} alt="Delete button" />
+                    </button>
+                  </div>
+                </Card>
+              ))}
+            </ListContacts>
+          )}
         </>
       )}
     </Container>
   );
 }
-
-// {filteredContacts.length !== 0 ? (
-
-// ) : (
-//   <NotFoundContact>
-//     <img src={noContactFound} alt="No contact found" />
-//     <p>
-//       Nenhum resultado encontrado para
-//       {' '}
-//       <strong>
-//         {searchTerm}
-//       </strong>
-//       .
-//     </p>
-//   </NotFoundContact>
-// )}
