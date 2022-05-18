@@ -12,6 +12,7 @@ import useErrors from '../../hooks/useErrors';
 import delay from '../../utils/delay';
 import formatPhone from '../../utils/formatPhone';
 import { addNewContact } from '../../services/api/newContact';
+import { updateContact } from '../../services/api/updateContact';
 
 export default function ContactForm({ type, contactToEdit }) {
   const [name, setName] = useState('');
@@ -56,17 +57,24 @@ export default function ContactForm({ type, contactToEdit }) {
 
   async function handleCreateNewContact() {
     setIsButtonLoading(true);
-    const response = await addNewContact({ name, phone });
+    await addNewContact({ name, phone });
     await delay(500);
     setIsButtonLoading(false);
     setIsButtonChecked(true);
     await delay(200);
-    console.log(response);
     refreshPage();
   }
 
-  function handleUpdateContact() {
-    console.log('update contact');
+  async function handleUpdateContact() {
+    const { id } = contactToEdit;
+
+    setIsButtonLoading(true);
+    await updateContact({ name, phone, id });
+    await delay(500);
+    setIsButtonLoading(false);
+    setIsButtonChecked(true);
+    await delay(200);
+    refreshPage();
   }
 
   return (
@@ -97,9 +105,22 @@ export default function ContactForm({ type, contactToEdit }) {
           disabled={!isFormValid}
         >
           {/* {isButtonLoading ? <Spinner size={32} className="spinner" /> : 'Cadastrar'} */}
-          {!isButtonChecked
+          {/* {!isButtonChecked
             ? isButtonLoading ? <Spinner size={32} className="spinner" /> : 'Cadastrar'
-            : <Check size={32} /> }
+            : <Check size={32} /> } */}
+
+          {!isButtonChecked ? (
+            <>
+              {isButtonLoading ? (
+                <Spinner size={32} className="spinner" />
+              ) : (
+                'Cadastrar'
+              )}
+            </>
+          ) : (
+            <Check size={32} />
+          )}
+
         </Button>
       ) : (
         <Button
@@ -107,8 +128,17 @@ export default function ContactForm({ type, contactToEdit }) {
           type="button"
           disabled={!isFormValid}
         >
-          {isButtonLoading ? <Spinner /> : 'Atualizar dados'}
-
+          {!isButtonChecked ? (
+            <>
+              {isButtonLoading ? (
+                <Spinner size={32} className="spinner" />
+              ) : (
+                'Atualizar dados'
+              )}
+            </>
+          ) : (
+            <Check size={32} />
+          )}
         </Button>
       )}
     </Container>
@@ -117,7 +147,9 @@ export default function ContactForm({ type, contactToEdit }) {
 
 ContactForm.propTypes = {
   type: PropTypes.string.isRequired,
-  contactToEdit: PropTypes.shape({ name: PropTypes.string, phone: PropTypes.string }),
+  contactToEdit: PropTypes.shape(
+    { name: PropTypes.string, phone: PropTypes.string, id: PropTypes.string },
+  ),
 };
 
 ContactForm.defaultProps = {

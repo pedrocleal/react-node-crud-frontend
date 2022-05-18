@@ -12,6 +12,7 @@ export default function EditContact() {
 
   const { id } = useParams();
 
+  // find contact by Id
   useEffect(() => {
     fetch(`http://localhost:3030/contacts/${id}`)
       .then(async (res) => {
@@ -29,6 +30,7 @@ export default function EditContact() {
       <PageHeader text={`Editando ${contactToEdit.name}...`} />
       <ContactForm
         buttonText="Atualizar dados"
+        type="EDIT"
         contactToEdit={contactToEdit}
       />
     </>

@@ -24,6 +24,7 @@
         "import/prefer-default-export": 0,
         "no-console": 0,
         "no-promise-executor-return": 0,
-        "react/jsx-no-bind": 0
+        "react/jsx-no-bind": 0,
+        "react/jsx-no-useless-fragment": 0
     }
 }

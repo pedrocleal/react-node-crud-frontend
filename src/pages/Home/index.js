@@ -25,7 +25,7 @@ export default function Home() {
   const [contactToDelete, setContactToDelete] = useState(null);
 
   const filteredContacts = contacts.filter(
-    (contact) => contact.name.toUpperCase().includes(searchTerm.toUpperCase()),
+    (contact) => contact.name.toUpperCase().startsWith(searchTerm.toUpperCase()),
   );
 
   // Effect function to run on first render and when the contacts list change
