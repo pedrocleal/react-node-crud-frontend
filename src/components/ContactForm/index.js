@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 import { useEffect, useState } from 'react';
+import { Spinner, Check } from 'phosphor-react';
 import FormGroup from '../FormGroup';
 import { Input } from '../Input';
 import { Button } from '../Button';
@@ -8,12 +9,15 @@ import { Container } from './styles';
 
 import useErrors from '../../hooks/useErrors';
 
+import delay from '../../utils/delay';
 import formatPhone from '../../utils/formatPhone';
 import { addNewContact } from '../../services/api/newContact';
 
 export default function ContactForm({ type, contactToEdit }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+  const [isButtonChecked, setIsButtonChecked] = useState(false);
 
   useEffect(() => {
     setName(contactToEdit?.name || '');
@@ -25,6 +29,10 @@ export default function ContactForm({ type, contactToEdit }) {
   } = useErrors();
 
   const isFormValid = errors.length === 0 && name && phone;
+
+  function refreshPage() {
+    window.location = '/';
+  }
 
   function handleNameInputChange(event) {
     setName(event.target.value);
@@ -47,8 +55,14 @@ export default function ContactForm({ type, contactToEdit }) {
   }
 
   async function handleCreateNewContact() {
+    setIsButtonLoading(true);
     const response = await addNewContact({ name, phone });
+    await delay(500);
+    setIsButtonLoading(false);
+    setIsButtonChecked(true);
+    await delay(200);
     console.log(response);
+    refreshPage();
   }
 
   function handleUpdateContact() {
@@ -56,7 +70,7 @@ export default function ContactForm({ type, contactToEdit }) {
   }
 
   return (
-    <Container>
+    <Container isButtonSpinning={isButtonLoading} isButtonChecked={isButtonChecked}>
       <FormGroup error={getErrorMessageByFieldName('name')}>
         <Input
           error={getErrorMessageByFieldName('name')}
@@ -82,8 +96,10 @@ export default function ContactForm({ type, contactToEdit }) {
           type="button"
           disabled={!isFormValid}
         >
-          Cadastrar
-
+          {/* {isButtonLoading ? <Spinner size={32} className="spinner" /> : 'Cadastrar'} */}
+          {!isButtonChecked
+            ? isButtonLoading ? <Spinner size={32} className="spinner" /> : 'Cadastrar'
+            : <Check size={32} /> }
         </Button>
       ) : (
         <Button
@@ -91,7 +107,7 @@ export default function ContactForm({ type, contactToEdit }) {
           type="button"
           disabled={!isFormValid}
         >
-          Atualizar dados
+          {isButtonLoading ? <Spinner /> : 'Atualizar dados'}
 
         </Button>
       )}

@@ -22,4 +22,5 @@ export const Button = styled.button`
     color: #ddd;
     cursor: not-allowed;
   }
+  
 `;
