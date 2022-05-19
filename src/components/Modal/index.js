@@ -1,26 +1,29 @@
 import PropTypes, { arrayOf } from 'prop-types';
 import ReactDom from 'react-dom';
 
+import { Spinner } from 'phosphor-react';
+import { useState } from 'react';
 import { Overlay, ModalFooter, Container } from './styles';
 
 import { Button } from '../Button';
+import { deleteContact } from '../../services/api/deleteContact';
+
+import delay from '../../utils/delay';
 
 export default function Modal({
   isModalDanger,
   contact,
   onCloseModal,
 }) {
+  const [isButtonLoading, setIsButtonLoading] = useState(false);
+
   const { id } = contact;
 
   async function handleDeleteContact(contactId) {
-    try {
-      await fetch(`http://localhost:3030/contacts/${contactId}`, {
-        method: 'DELETE',
-      });
-      console.log('Delete ok');
-    } catch (error) {
-      console.log(error);
-    }
+    setIsButtonLoading(true);
+    await deleteContact(contactId);
+    await delay(500);
+    setIsButtonLoading(false);
     onCloseModal();
   }
 
@@ -54,8 +57,15 @@ export default function Modal({
                 className="confirm-button"
                 onClick={() => handleDeleteContact(id)}
               >
-                {isModalDanger ? 'Deletar' : 'Confirmar'}
-
+                {isButtonLoading ? (
+                  <>
+                    <Spinner size={32} className="spinner" />
+                  </>
+                ) : (
+                  <>
+                    {isModalDanger ? 'Deletar' : 'Confirmar'}
+                  </>
+                )}
               </Button>
             </ModalFooter>
           </>
@@ -74,7 +84,15 @@ export default function Modal({
 
               </Button>
               <Button>
-                {isModalDanger ? 'Deletar' : 'Confirmar'}
+                {isButtonLoading ? (
+                  <>
+                    <Spinner size={32} className="spinner" />
+                  </>
+                ) : (
+                  <>
+                    {isModalDanger ? 'Deletar' : 'Confirmar'}
+                  </>
+                )}
               </Button>
             </ModalFooter>
           </>

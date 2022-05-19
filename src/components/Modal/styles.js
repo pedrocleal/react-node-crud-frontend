@@ -1,4 +1,13 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const Overlay = styled.div`
   width: 100%;
@@ -33,7 +42,14 @@ export const ModalFooter = styled.footer`
   align-items: center;
   justify-content: flex-end;
 
+  .spinner {
+    animation: ${spin} 2s linear infinite;
+  }
+
   .confirm-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: ${({ danger, theme }) => (danger ? theme.colors.red : theme.colors.purple)};
   
     &:hover {
