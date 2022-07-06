@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
 
 import { useEffect, useState } from 'react';
@@ -11,10 +12,8 @@ import useErrors from '../../hooks/useErrors';
 
 import delay from '../../utils/delay';
 import formatPhone from '../../utils/formatPhone';
-import { addNewContact } from '../../services/api/newContact';
-import { updateContact } from '../../services/api/updateContact';
 
-export default function ContactForm({ type, contactToEdit }) {
+export default function ContactForm({ onSubmit, contactToEdit, buttonText }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [isButtonLoading, setIsButtonLoading] = useState(false);
@@ -55,22 +54,11 @@ export default function ContactForm({ type, contactToEdit }) {
     }
   }
 
-  async function handleCreateNewContact() {
+  async function handleSubmit(event) {
+    event.preventDefault();
     setIsButtonLoading(true);
-    await addNewContact({ name, phone });
     await delay(500);
-    setIsButtonLoading(false);
-    setIsButtonChecked(true);
-    await delay(200);
-    refreshPage();
-  }
-
-  async function handleUpdateContact() {
-    const { id } = contactToEdit;
-
-    setIsButtonLoading(true);
-    await updateContact({ name, phone, id });
-    await delay(500);
+    onSubmit({ name, phone });
     setIsButtonLoading(false);
     setIsButtonChecked(true);
     await delay(200);
@@ -79,77 +67,42 @@ export default function ContactForm({ type, contactToEdit }) {
 
   return (
     <Container isButtonSpinning={isButtonLoading} isButtonChecked={isButtonChecked}>
-      <FormGroup error={getErrorMessageByFieldName('name')}>
-        <Input
-          error={getErrorMessageByFieldName('name')}
-          value={name}
-          onChange={(event) => handleNameInputChange(event)}
-          placeholder="Nome"
-        />
-      </FormGroup>
-      <FormGroup error={getErrorMessageByFieldName('phone')}>
-        <Input
-          type="tel"
-          maxLength={15}
-          error={getErrorMessageByFieldName('phone')}
-          value={phone}
-          onChange={(event) => handlePhoneInputChange(event)}
-          placeholder="Telefone"
-        />
-      </FormGroup>
+      <form onSubmit={handleSubmit}>
+        <FormGroup error={getErrorMessageByFieldName('name')}>
+          <Input
+            error={getErrorMessageByFieldName('name')}
+            value={name}
+            onChange={(event) => handleNameInputChange(event)}
+            placeholder="Nome*"
+          />
+        </FormGroup>
+        <FormGroup error={getErrorMessageByFieldName('phone')}>
+          <Input
+            type="tel"
+            maxLength={15}
+            error={getErrorMessageByFieldName('phone')}
+            value={phone}
+            onChange={(event) => handlePhoneInputChange(event)}
+            placeholder="Telefone*"
+          />
+        </FormGroup>
 
-      {type === 'CREATE' ? (
-        <Button
-          onClick={handleCreateNewContact}
-          type="button"
-          disabled={!isFormValid}
-        >
-          {/* {isButtonLoading ? <Spinner size={32} className="spinner" /> : 'Cadastrar'} */}
-          {/* {!isButtonChecked
-            ? isButtonLoading ? <Spinner size={32} className="spinner" /> : 'Cadastrar'
-            : <Check size={32} /> } */}
-
-          {!isButtonChecked ? (
-            <>
-              {isButtonLoading ? (
-                <Spinner size={32} className="spinner" />
-              ) : (
-                'Cadastrar'
-              )}
-            </>
-          ) : (
-            <Check size={32} />
-          )}
-
+        <Button disabled={!isFormValid}>
+          {isButtonChecked ? (
+            <Check />
+          ) : isButtonLoading ? (
+            <Spinner />
+          ) : buttonText}
         </Button>
-      ) : (
-        <Button
-          onClick={handleUpdateContact}
-          type="button"
-          disabled={!isFormValid}
-        >
-          {!isButtonChecked ? (
-            <>
-              {isButtonLoading ? (
-                <Spinner size={32} className="spinner" />
-              ) : (
-                'Atualizar dados'
-              )}
-            </>
-          ) : (
-            <Check size={32} />
-          )}
-        </Button>
-      )}
+      </form>
     </Container>
   );
 }
 
 ContactForm.propTypes = {
-  type: PropTypes.string.isRequired,
-  contactToEdit: PropTypes.shape(
-    { name: PropTypes.string, phone: PropTypes.string, id: PropTypes.string },
-  ),
+  contactToEdit: PropTypes.shape(),
+  buttonText: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 ContactForm.defaultProps = {

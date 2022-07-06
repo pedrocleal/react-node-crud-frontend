@@ -5,6 +5,7 @@ import PageHeader from '../../components/PageHeader';
 
 import Loader from '../../components/Loader';
 import delay from '../../utils/delay';
+import { updateContact } from '../../services/api/updateContact';
 
 export default function EditContact() {
   const [contactToEdit, setContactToEdit] = useState({});
@@ -24,13 +25,29 @@ export default function EditContact() {
       .catch((e) => console.log(e));
   }, []);
 
+  async function handleSubmit(formData) {
+    try {
+      const updatedData = {
+        name: formData.name,
+        phone: formData.phone,
+        id,
+      };
+
+      const response = await updateContact(updatedData);
+
+      console.log(response);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   return (
     <>
       {isLoading ? <Loader /> : null}
       <PageHeader text={`Editando ${contactToEdit.name}...`} />
       <ContactForm
+        onSubmit={handleSubmit}
         buttonText="Atualizar dados"
-        type="EDIT"
         contactToEdit={contactToEdit}
       />
     </>

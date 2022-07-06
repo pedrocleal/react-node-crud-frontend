@@ -117,6 +117,7 @@ export const NotFoundContact = styled.div`
   p {
     margin-left: 16px;
     font-size: 18px;
+    word-break: break-all;
   }
 `;
 

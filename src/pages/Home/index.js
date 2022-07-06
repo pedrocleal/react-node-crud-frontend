@@ -66,7 +66,7 @@ export default function Home() {
 
       {/* If does not have any contact */}
 
-      {contacts.length === 0 ? (
+      {(contacts.length === 0 && !isLoading) ? (
         <NewContactContainer>
           <Link to="/new">Novo contato</Link>
           <hr />
@@ -99,7 +99,7 @@ export default function Home() {
             <Link to="/new">Novo contato</Link>
           </HomeHeader>
           <hr />
-          {filteredContacts.length === 0 ? (
+          {(filteredContacts.length === 0 && !isLoading) ? (
             <NotFoundContact>
               <img src={noContactFound} alt="No contact found" />
               <p>
